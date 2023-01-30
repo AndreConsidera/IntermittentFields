@@ -1,5 +1,5 @@
 using DrWatson
-@quickactivate("Intermittency Paradox");
+@quickactivate("IntermittentFields");
 using JLD2
 using Statistics
 using StatsPlots;plotly()

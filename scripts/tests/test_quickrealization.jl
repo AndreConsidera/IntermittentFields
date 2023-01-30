@@ -1,5 +1,5 @@
 using DrWatson;
-@quickactivate("Intermittency Paradox")
+@quickactivate("IntermittentFields")
 include(srcdir("intermittentfields_mod.jl"))
 using .IntermittentFields
 using Plots

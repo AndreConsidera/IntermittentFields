@@ -1,4 +1,4 @@
-name = "Intermittency Paradox"
+name = "IntermittentFields"
 authors = ["Andre Considera"]
 
 [deps]

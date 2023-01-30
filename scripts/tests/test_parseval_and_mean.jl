@@ -1,5 +1,5 @@
 using DrWatson
-@quickactivate("Intermittency Paradox");
+@quickactivate("IntermittentFields");
 using FFTW
 using Distributions
 using Random

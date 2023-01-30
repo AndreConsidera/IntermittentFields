@@ -1,5 +1,5 @@
 using DrWatson;
-@quickactivate("Intermittency Paradox");
+@quickactivate("IntermittentFields");
 include(srcdir("IntermittentFields.jl"));
 using .IntermittentFields
 

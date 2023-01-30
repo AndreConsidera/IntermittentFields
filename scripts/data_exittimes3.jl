@@ -1,7 +1,7 @@
 using Distributed
 procs = addprocs(8)
 @everywhere using DrWatson
-@everywhere @quickactivate "Intermittency Paradox";
+@everywhere @quickactivate "IntermittentFields";
 @everywhere include(srcdir("IntermittentFields.jl"))
 @everywhere using .IntermittentFields
 @everywhere using FFTW

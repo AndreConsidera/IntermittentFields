@@ -1,5 +1,5 @@
 using DrWatson;
-@quickactivate("Intermittency Paradox");
+@quickactivate("IntermittentFields");
 include(srcdir("intermittentfields_mod.jl"))
 import FFTW
 using .IntermittentFields
@@ -19,7 +19,7 @@ planning_effort = FFTW.MEASURE
 using Distributed
 procs = addprocs(8)
 @everywhere using DrWatson
-@everywhere @quickactivate("Intermittency Paradox");
+@everywhere @quickactivate("IntermittentFields");
 @everywhere include(srcdir("intermittentfields_mod.jl"))
 @everywhere using .IntermittentFields
 @everywhere using FFTW

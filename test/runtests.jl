@@ -1,5 +1,5 @@
 using DrWatson, Test
-@quickactivate "Itermittency Paradox"
+@quickactivate "IntermittentFields"
 
 # Here you include files using `srcdir`
 # include(srcdir("file.jl"))
@@ -8,7 +8,7 @@ using DrWatson, Test
 println("Starting tests")
 ti = time()
 
-@testset "Itermittency Paradox tests" begin
+@testset "IntermittentFields tests" begin
     @test  1==1
 end
 

@@ -11,7 +11,7 @@ using LaTeXStrings
 using Distributed
 using ProgressMeter
 
-@quickactivate("Intermittency Paradox");
+@quickactivate("IntermittentFields");
 include(srcdir("general_lib.jl"));
 include(srcdir("compute_kernels.jl"));
 
