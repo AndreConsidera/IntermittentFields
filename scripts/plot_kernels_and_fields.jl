@@ -12,8 +12,6 @@ using LaTeXStrings
 using FFTW
 using Polynomials
 
-
-# linha nova
 #plot kernels
 N=2^14
 r = Array(range(0,stop=L,length=N),); 
