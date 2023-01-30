@@ -9,7 +9,7 @@ println("Starting tests")
 ti = time()
 
 @testset "Itermittency Paradox tests" begin
-    @test 1 == 1
+    @test  1==1
 end
 
 ti = time() - ti
