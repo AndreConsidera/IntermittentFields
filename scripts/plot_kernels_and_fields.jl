@@ -14,9 +14,9 @@ using Polynomials
 
 #plot kernels
 N=2^14
-r = Array(range(0,stop=L,length=N),); 
+r = Array(range(-pi,stop=pi,length=N),); 
 eta = 0.0 #4*pi/N;
-ξ = 1/3
+ξ = 2/3
 
 expker = CovarianceKernel(r, eta, ξ);
 resexp = CovarianceKernel(r, eta, CovarianceCorrelation(expkernel), ξ, false); 
@@ -26,8 +26,8 @@ logker = SingularKernel(r, eta);
 # plot kernels 
 begin
     plot(ylims=(0,4),xlims=(0,1),title="Kernels",xlabel="r")
-    plot!(r,expkernel(r,ξ), label="Exp")
-    plot!(r,piecewisekernel(r,ξ), label="Piecewise")
+    plot!(expker.r,expker.cr, label="Exp-default")
+    plot!(expker.r,resexp.cr, label="not-rescaled",alpha=0.5,lw=5)
 #    plot!(logker.r,logker.cr, label="Log")
 end
 #savefig(p,plotsdir(savename("kernels",d,"png")));

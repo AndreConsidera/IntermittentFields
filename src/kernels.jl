@@ -39,7 +39,7 @@ struct CovarianceKernel<:AbstractKernel
     end
 end
 
-CovarianceKernel(r::AbstractArray, eta::Real, ξ::Real) = CovarianceKernel(r::AbstractArray, eta::Real, CovarianceCorrelation(expkernel), ξ::Real, true)
+CovarianceKernel(r::AbstractArray, eta::Real, ξ::Real) = CovarianceKernel(r::AbstractArray, eta::Real, CovarianceCorrelation(expkernel), ξ::Real, false)
 
 
 struct SingularKernel<:AbstractKernel
