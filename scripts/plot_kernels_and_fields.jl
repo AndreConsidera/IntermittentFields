@@ -12,13 +12,6 @@ using LaTeXStrings
 using FFTW
 using Polynomials
 
-L = 2
-
-
-function piecewisekernel(r::Union{AbstractArray{<:Real},Real}, ξ::Real)
-    @.((1. - (r/L)^ξ) * (r<L)) 
-end
-
 #plot kernels
 N=2^14
 r = Array(range(0,stop=L,length=N),); 
