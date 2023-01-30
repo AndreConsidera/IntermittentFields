@@ -26,8 +26,13 @@ logker = SingularKernel(r, eta);
 # plot kernels 
 begin
     plot(ylims=(0,4),xlims=(0,1),title="Kernels",xlabel="r")
-    plot!(expker.r,expker.cr, label="Exp-default")
-    plot!(expker.r,resexp.cr, label="not-rescaled",alpha=0.5,lw=5)
+    #plot!(expker.r,expker.cr, label="Exp-default")
+    #plot!(expker.r,resexp.cr, label="not-rescaled",alpha=0.5,lw=5)
+    plot!(expker.r,expker.Lr_sq, label="default")
+    plot!(expker.r,resexp.Lr_sq, label="non-rescaled",alpha=0.5,lw=5)
+    plot!(expker.r,pwker.cr, label="pw",alpha=0.5,lw=2)
+    
+    
 #    plot!(logker.r,logker.cr, label="Log")
 end
 #savefig(p,plotsdir(savename("kernels",d,"png")));
