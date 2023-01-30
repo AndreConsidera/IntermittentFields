@@ -5,7 +5,7 @@ This code base is using the [Julia Language](https://julialang.org/) and
 to make a reproducible scientific project named
 > IntermittentFields
 
-It is authored by Andre Considera.
+It is authored by André Considera.
 
 To (locally) reproduce this project, do the following:
 
