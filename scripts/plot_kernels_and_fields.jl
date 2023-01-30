@@ -13,9 +13,8 @@ using FFTW
 using Polynomials
 
 L = 2
-function expkernel(r::Union{AbstractArray{<:Real},Real}, ξ::Real)
-    @.(cos(-(r)^ξ))
-end
+
+
 function piecewisekernel(r::Union{AbstractArray{<:Real},Real}, ξ::Real)
     @.((1. - (r/L)^ξ) * (r<L)) 
 end
