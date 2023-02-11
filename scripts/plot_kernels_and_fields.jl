@@ -15,8 +15,8 @@ using Polynomials
 #plot kernels
 N=2^14
 r = Array(range(-pi,stop=pi,length=N),); 
-eta = 0.0 #4*pi/N;
-ξ = 2/3
+eta = 0.003 #4*pi/N;
+ξ = 1/3
 
 expker = CovarianceKernel(r, eta, ξ);
 resexp = CovarianceKernel(r, eta, CovarianceCorrelation(expkernel), ξ, false); 
@@ -40,14 +40,14 @@ end
 c0=exp(eta/2)^(ξ)
 
 begin
-    plot(ylims = (0,1), xlims = (1e-4,1), title = "Kernels", xlabel = "r",xaxis=:log,yaxis=:log)
+    plot(ylims = (0,1), xlims = (1e-4,1), title = "Kernels", xlabel = "r",xaxis=:linear,yaxis=:linear)
 
-   # plot!(expker.r[r.>0], expker.r[r.>0].^(-ξ) .*(1 .-expker.cr[r.>0]), label="Exp",linealpha = 0.2, lw = 6,xaxis=:linear,yaxis=:linear)
-   # plot!(expker.r, expker.Lr_sq, label=L"L*L")
-    plot!(resexp.r[resexp.r.>0], resexp.r[resexp.r.>0].^(0).*(maximum(resexp.Lr_sq) .-resexp.Lr_sq[resexp.r.>0]), label=L"not resc")
+    plot!(pwker.r, pwker.cr, label="Exp",linealpha = 0.2, lw = 6,xaxis=:linear,yaxis=:linear)
+    plot!(pwker.r, pwker.Lr_sq, label="L*L")
+    #plot!(resexp.r[resexp.r.>0], resexp.r[resexp.r.>0].^(0).*(maximum(resexp.Lr_sq) .-resexp.Lr_sq[resexp.r.>0]), label=L"not resc")
    # plot!(pwker.r, pwker.cr)
-    plot!(resexp.r[resexp.r.>0], resexp.r[resexp.r.>0] .^(0).*(maximum(resexp.cr).-resexp.cr[resexp.r.>0]),lw=15,alpha=0.4)
-    plot!(resexp.r[resexp.r.>0], resexp.r[resexp.r.>0] .^(ξ),lw=3,alpha=1)
+    #plot!(resexp.r[resexp.r.>0], resexp.r[resexp.r.>0] .^(0).*(maximum(resexp.cr).-resexp.cr[resexp.r.>0]),lw=15,alpha=0.4)
+    #plot!(resexp.r[resexp.r.>0], resexp.r[resexp.r.>0] .^(ξ),lw=3,alpha=1)
 
     # plot!(pwker.r[r.>0],exp.(-1.36*pwker.r[r.>0] .^ξ))
     #plot!(pwker.r, expker.cr, label="piecewise",linealpha = 0.2, lw = 6)
