@@ -14,13 +14,17 @@ gaussianmean(λ, ξ) = (λ^2)/(2 * ((2/(2-ξ))*(1-ξ^2)/(1+ξ)) * (D0*(1-(ξ/2))
 # <τ(λ,ξ)>vsλ  
 begin
     plt = plot(title = "<τ(λ,ξ)>", xlabel = "λ", legend = :topleft);
-    #plot!(xaxis = :log, yaxis = :log);
-    #plot!(xlims = (1e-2, 2), ylims = (1e-3, 10));
-    plot!(xaxis = :linear, yaxis = :linear);
-    plot!(xlims = (0, 1.2), ylims = (0, 3));
+    plot!(xaxis = :log, yaxis = :log);
+    plot!(xlims = (1e-2, 2), ylims = (1e-3, 10));
+    #plot!(xaxis = :linear, yaxis = :linear);
+    #plot!(xlims = (0, 1.2), ylims = (0, 3));
     
     #files = readdir(datadir("sims", "2particles", "non_rescaled_kernel"), join = true)
     files = readdir(datadir("sims", "2particles", "piecewisekernel"), join = true)
+    #files = filter(x->occursin("N=8192", x), files)
+    files = filter(x->occursin("N=4096", x), files)
+    files = filter(x->occursin("dt=0.000156", x), files)
+
     λs = [1/2^i for i in 0:6]
     cm = cgrad(:jet, length(files), categorical = true)
     
@@ -58,6 +62,10 @@ begin
     
     #files = readdir(datadir("sims", "2particles", "non_rescaled_kernel"), join = true)
     files = readdir(datadir("sims", "2particles", "piecewisekernel"), join = true)
+    files = filter(x->occursin("N=8192", x), files)
+    #files = filter(x->occursin("N=4096", x), files)
+    files = filter(x->occursin("dt=0.000156", x), files)
+
     λs = [1/2^i for i in 0:6]
     cm = cgrad(:rainbow, 7, categorical = true)
     

@@ -11,8 +11,9 @@ using Alert
 Np = Int(ceil(nproc * 10/length(procs)))
 dt = 1/(4 * 16 * 10^2)
 N = 2^7
-α = 0.2
+α = 0.6
 ξ = 2/3
+kernel = piecewisekernel
 tmax = 10.
 beta = 1.
 planning_effort = FFTW.MEASURE
@@ -39,10 +40,10 @@ out = @strdict t t2 t4 t8 t16 t32 t64 p p2 p4 p8 p16 p32 p64;
 
 a = Array{Future}(undef, nproc)
 for i in 1:nproc
-    a[i] = @spawnat procs[i]  doexittime3(Np, dt, N, α, ξ, tmax, beta, planning_effort)
+    a[i] = @spawnat procs[i]  doexittime3(Np, dt, N, α, ξ, tmax, beta, planning_effort, kernel)
 end
 
-path = datadir("sims", "zeromodes", "non_rescaled_kernel", savename("ET3l2normR12R13", params, "jld2"));
+path = datadir("sims", "zeromodes", string(kernel), savename("ET3l2normR12R13", params, "jld2"));
 @alert begin    
     for i in 1:nproc
         t[i,:],t2[i,:],t4[i,:],t8[i,:],t16[i,:],t32[i,:],t64[i,:], p[i, :, :], p2[i, :, :],p4[i, :, :],p8[i, :, :],p16[i, :, :],p32[i, :, :],p64[i, :, :] = fetch(a[i])

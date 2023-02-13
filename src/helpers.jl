@@ -229,8 +229,7 @@ function doexittime2(Np::Integer, dt::Real, N::Real ,α::Real, ξ::Real, tmax::R
     return exittime, exittime2, exittime4, exittime8, exittime16, exittime32, exittime64, finalp, finalp2, finalp4, finalp8, finalp16, finalp32, finalp64
 end
 
-
-function doexittime3(Np::Integer, dt::Real, N::Real ,α::Real, ξ::Real, tmax::Real, beta::Real, FFTW_effort::UInt32)
+function doexittime3(Np::Integer, dt::Real, N::Real ,α::Real, ξ::Real, tmax::Real, beta::Real, FFTW_effort::UInt32, c::Function)
     dx = 2 * pi/N    
     eta = 2 * dx
     r0 = 2 * eta
@@ -238,10 +237,10 @@ function doexittime3(Np::Integer, dt::Real, N::Real ,α::Real, ξ::Real, tmax::R
     kappa = eta^beta
     lam = 1
     #instantiating kernels and FFT
-    expker = CovarianceKernel(r, eta, ξ)
+    ker = CovarianceKernel(r, eta, CovarianceCorrelation(c), ξ, false)
     logker = SingularKernel(r, eta)
-    Pinv = plan_irfft(copy(expker.Lk), length(expker.r); flags = FFTW_effort, timelimit = Inf)
-    Pforward = plan_rfft(copy(expker.r); flags = FFTW_effort, timelimit = Inf);
+    Pinv = plan_irfft(copy(ker.Lk), length(ker.r); flags = FFTW_effort, timelimit = Inf)
+    Pforward = plan_rfft(copy(ker.r); flags = FFTW_effort, timelimit = Inf);
     
     push!(r, pi)
     maxiter = Int(tmax/dt);
@@ -318,11 +317,11 @@ function doexittime3(Np::Integer, dt::Real, N::Real ,α::Real, ξ::Real, tmax::R
             t = t + dt
             if R >= lam break end
 
-            g1 = UnitaryWhiteNoise(div(length(expker.r), 2) + 1)
-            g2 = UnitaryWhiteNoise(div(length(expker.r), 2) + 1)
+            g1 = UnitaryWhiteNoise(div(length(ker.r), 2) + 1)
+            g2 = UnitaryWhiteNoise(div(length(ker.r), 2) + 1)
             # here we use Pforward and Pinv
             noise = GmcNoise(logker, g1, g2, α, Pforward, Pinv)
-            u = realization(expker, noise, Pinv)
+            u = realization(ker, noise, Pinv)
             uinterp = linear_interpolation(r, push!(u, u[1]), extrapolation_bc = Periodic())
             p = p + uinterp(p) * dt^0.5 + (2 * kappa * dt)^0.5 * rand(Normal(0,1), length(p))
         end
