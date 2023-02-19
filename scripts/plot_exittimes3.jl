@@ -12,8 +12,8 @@ cm[2] = cgrad(:blues, 4, categorical = true);
 
 # zeromode =========================================================================
 begin  
-    α = 0.0
-    Nref = 2^12
+    α = 0.6
+    Nref = 2^13
     plt = plot(title= "relaxation of shapes α=$α, Np=4e5",ylims=(-3,3),xlims=(0,1));
     plot!(yaxis = "(PDF_N-PDF_$Nref)*(N/$Nref)^(0.7)")
     for (j, α) in enumerate([α])
@@ -89,11 +89,11 @@ prefix = "ET3"
 
 begin
     α = 0.6
-    plt = plot(title= "pdf of shapes α=$α, Np=4e5",ylims=(-3,12),xlims=(0,1));
+    plt = plot(title= "pdf of shapes α=$α, Np=4e5",ylims=(0,14),xlims=(0.0,1));
     plot!(yaxis = "PDF_N")
-    #plot!(yscale = :log, ylims = (1e-3,10))
+    #plot!(yscale = :log, ylims = (1e-1,20))
     for (j, α) in enumerate([α])
-        for (k, i) in enumerate(7:12)
+        for (k, i) in enumerate(7:13)
             N = 2^i
             allf = filter(x->occursin(prefix, x), readdir(datadir("sims","zeromodes",path), join = true))
             allf = filter(x->occursin("N=$N", x), allf)

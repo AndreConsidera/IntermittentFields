@@ -9,7 +9,7 @@ module IntermittentFields
     export expkernel, piecewisekernel, logkernel
     export CovarianceCorrelation, CovarianceKernel, SingularCorrelation, SingularKernel
     export UnitaryWhiteNoise, GmcNoise
-    export realization, doexittime2, quickrealization, doexittime3
+    export realization, doexittime2, quickrealization, doexittime3, dispersion
     export structurefunc, meanenergy, δv 
 
     include("norms.jl")
@@ -18,4 +18,5 @@ module IntermittentFields
     include("noise.jl")
     include("helpers.jl")
     include("stats.jl")
+    include("dispersion.jl")
 end # end of module
