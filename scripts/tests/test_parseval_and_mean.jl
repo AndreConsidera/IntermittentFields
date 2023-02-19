@@ -16,7 +16,7 @@ include(srcdir("stats.jl"));
 N=2^12
 r = Array(range(-pi,stop=pi,length=N),); 
 eta = 0.0;
-ξ = 1/6
+ξ = 2/3
 expker = CovarianceKernel(r, eta, CovarianceCorrelation(expkernel), ξ, false); 
 pwker = CovarianceKernel(r, eta, CovarianceCorrelation(piecewisekernel), ξ, false);
 #expker = CovarianceKernel(r, eta, ξ);
@@ -31,7 +31,7 @@ A = zeros(M)
 for i in 1:M
     g1 = UnitaryWhiteNoise(div(N, 2) + 1);
     g2 = UnitaryWhiteNoise(div(N, 2) + 1);
-    α = 0.0
+    α = 0.6
     Γ = GmcNoise(logker,g1,g2,α);
     w = realization(pwker, Γ);
     

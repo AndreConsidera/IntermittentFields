@@ -58,12 +58,12 @@ begin
     #plot!(xaxis = :log, yaxis = :log);
     #plot!(xlims = (1e-1, 2), ylims = (1e-3, 10));
     plot!(xaxis = :linear, yaxis = :linear);
-    plot!(xlims = (0, 1), ylims = (0, 3));
+    plot!(xlims = (0, 1.2), ylims = (0, 5));
     
     #files = readdir(datadir("sims", "2particles", "non_rescaled_kernel"), join = true)
     files = readdir(datadir("sims", "2particles", "piecewisekernel"), join = true)
-    files = filter(x->occursin("N=8192", x), files)
-    #files = filter(x->occursin("N=4096", x), files)
+    #files = filter(x->occursin("N=8192", x), files)
+    files = filter(x->occursin("N=4096", x), files)
     files = filter(x->occursin("dt=0.000156", x), files)
 
     λs = [1/2^i for i in 0:6]
