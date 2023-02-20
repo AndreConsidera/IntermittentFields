@@ -5,7 +5,7 @@ using .IntermittentFields
 using Random
 using Statistics
 using Distributions
-using Plots;plotly()
+using Plots;gr()
 using Interpolations
 using JLD2
 using LaTeXStrings
@@ -15,8 +15,8 @@ using Polynomials
 #plot kernels
 N=2^14
 r = Array(range(-pi,stop=pi,length=N),); 
-eta = 0.003 #4*pi/N;
-ξ = 1/3
+eta = 0.0 #4*pi/N;
+ξ = 2/3
 
 expker = CovarianceKernel(r, eta, ξ);
 resexp = CovarianceKernel(r, eta, CovarianceCorrelation(expkernel), ξ, false); 
@@ -61,10 +61,11 @@ plot(r, u)
 
 #Intermittent fields
 g2 = UnitaryWhiteNoise(div(N, 2) + 1);
-α = 0.25
+α = 0.6
 Γ = GmcNoise(logker,g1,g2,α);
-v = realization(expker, Γ);
-plot(r,[u, v])
+v = realization(pwker, Γ);
+plot!(r, v,label="α=$α",ylims=(-3,10))
+savefig(plotsdir("fields.png"))
 
 # plot sp
 p = 4
@@ -86,17 +87,18 @@ display(P)
 
 # ζ(p) ∼ lognormal
 function ζ(p, m, α)
-    sp_abs, sp, l = structurefunc(expker_rescaled, m, p, α);
+    sp_abs, sp, l = structurefunc(pwker, m, p, α);
 
     pol=Polynomials.fit(log.(l), log.(sp_abs), 1)
     coeffs(pol)[2]
     return coeffs(pol)[2]
 end
 
-α=0.25
+α=0.3
 z=[ζ(p, 1000, α) for p in 1:8]
 x=[i for i in 1:8]
-scatter(1:8,z,markershape=:circle);
-plot!(x,x.*ξ/2);
-plot!(x,x.*ξ/2 - x.*(x./2 .-1).*α^2)
+scatter(1:8,z,markershape=:circle,label="measured",title="ζ(p),α=$α",xlabel="p");
+plot!(x,x.*ξ/2, label="monofractal");
+plot!(x,x.*ξ/2 - x.*(x./2 .-1).*α^2,label="lognormal")
 
+savefig(plotsdir("ζp.png"))
