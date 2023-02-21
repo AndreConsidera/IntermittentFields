@@ -15,11 +15,11 @@ prefix = "ET3l2normR12R13"
 
 begin
     α = 0.6
-    plt = plot(title= "pdf of shapes α=$α, Np=4e5",ylims=(0,12),xlims=(0,1));
+    plt = plot(title= "pdf of shapes α=$α, Np=4e5",ylims=(0,12),xlims=(0,1), legend = :topleft);
     plot!(yaxis = "PDF_N")
     #plot!(yscale = :log, ylims = (1e-3,10))
     for (j, α) in enumerate([α])
-        for (k, i) in enumerate(7:10)
+        for (k, i) in enumerate(7:14)
             N = 2^i
             allf = filter(x->occursin(prefix, x), readdir(datadir("sims","zeromodes",path, "dispersion"), join = true))
             allf = filter(x->occursin("N=$N", x), allf)

@@ -2,7 +2,7 @@ using DrWatson
 @quickactivate("IntermittentFields");
 using JLD2
 using Statistics
-using StatsPlots;plotly()
+using StatsPlots;gr()
 using StatsBase
 using LinearAlgebra
 
@@ -89,11 +89,11 @@ prefix = "ET3l2normR12R13"
 
 begin
     αs = 0.6
-    plt = plot(title= "pdf of shapes, α=$αs, Np=4e5",ylims=(0,12),xlims=(0.0,1));
+    plt = plot(title= "pdf of shapes, Np=4e5",ylims=(0,12),xlims=(0.0,1), legend = :topleft);
     plot!(yaxis = "PDF_N")
     #plot!(yscale = :log, ylims = (1e-1,20))
     for (j, α) in enumerate(αs)
-        for (k, i) in enumerate(7:10)
+        for (k, i) in enumerate(7:13)
             N = 2^i
             allf = filter(x->occursin(prefix, x), readdir(datadir("sims","zeromodes",path), join = true))
             allf = filter(x->occursin("N=$N", x), allf)
@@ -120,7 +120,7 @@ begin
             end
             
             pdf = normalize(fit(Histogram,r1, 0:0.001:1.0), mode=:pdf)
-            plot!(Array(range(0,stop=1,length=1000),),  pdf.weights, label="N=$N") #, c=cm[j][k] )
+            plot!(Array(range(0,stop=1,length=1000),),  pdf.weights, label="N=$N, α=$α") #, c=cm[j][k] )
         end
         
     end

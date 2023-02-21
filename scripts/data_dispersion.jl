@@ -6,6 +6,33 @@ using FFTW
 using Alert
 using Dates
 
+
+et = 10*ones(100)
+et2 = copy(et)
+# condition return vector of Bool
+function condition1(p, t)
+    [sqrt((p[1,i]-p[2,i])^2 + (p[1, i]-p[3, i])^2) >= 1 for i in 1:100]
+end
+
+function condition2(p, t)
+    [sqrt((p[1,i]-p[2,i])^2 + (p[1, i]-p[3, i])^2) >= 1/2 for i in 1:100]
+end
+
+
+function affect1(p, t, idx)
+    et[idx] = min(et[idx], t[idx])
+end
+
+function affect2(p, t, idx)
+    et2[idx] = min(et2[idx], t[idx])
+end
+
+cb1 = VectorCallback(condition1, affect1)
+cb2 = VectorCallback(condition2, affect2)
+
+cs = VectorCallbackSet((cb1,cb2))
+
+
 #======================== callbacks for ncor = 1
 exittime = 10*ones(10)
 exittime2= 10*ones(10)
@@ -53,13 +80,13 @@ end
 # all parameters
 allparams = Dict(
     "np" => 3, 
-    "ncor" => 4000,
-    "nindep" => 10,     
+    "ncor" => 100,
+    "nindep" => 1,     
     "α" => [0.6],
     "ξ" => 2/3,
     "kernel" => piecewisekernel,
     "tmax" => 10,
-    "N" => [2^i for i in 11:12],
+    "N" => [2^i for i in 7:7],
     "beta" => 1.0,
     "planning_effort" => FFTW.MEASURE,
     "sizefunc" => R12R13,
@@ -70,7 +97,7 @@ dicts = dict_list(allparams);
 
 function makesim(d::Dict)
     @unpack np, ncor, nindep, α, ξ, kernel, tmax, N, beta, planning_effort, sizefunc, dt = d
-    t, p = dispersion(nindep, dt, N, α, ξ, tmax, beta, planning_effort, kernel, np, ncor, sizefunc, logmessage)
+    t, p = dispersion(nindep, dt, N, α, ξ, tmax, beta, planning_effort, kernel, np, ncor, sizefunc, logmessage, cs)
     fulld = copy(d)
     fulld["t"] = t
     fulld["p"] = p
@@ -80,14 +107,15 @@ end
 @alert for (i, d) in enumerate(dicts) 
     println("sim number=$i/$(length(dicts))")
     fulldict = makesim(d)
-#    @tagsave(datadir("sims", "zeromodes", string(fulldict["kernel"]), "dispersion", savename("ET3l2normR12R13", d, "jld2")), fulldict, safe = DrWatson.readenv("DRWATSON_SAFESAVE", true))
+    #@tagsave(datadir("sims", "zeromodes", string(fulldict["kernel"]), "dispersion", savename("ET3l2normR12R13", d, "jld2")), fulldict, safe = DrWatson.readenv("DRWATSON_SAFESAVE", true))
 end
 
 
-
-
-#firstsim = readdir(datadir("sims","zeromodes","piecewisekernel", "dispersion"), join = true)[4]
-#a=wload(firstsim)
+sim = filter(x->occursin("ncor=40_", x), readdir(datadir("sims","zeromodes","piecewisekernel","dispersion"), join = true))
+a=wload(sim[1])
+t=vec(a["t"])
+et
+#firstsim = readdir(datadir("sims","zeromodes","piecewisekernel", "dispersion"), join = true)
 
 #=
 using DataFrames
