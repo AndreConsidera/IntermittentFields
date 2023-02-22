@@ -132,8 +132,8 @@ end
 begin
     α = 0.0
     plt = plot(title= "pdf of τ_3 α=$α, Np=4e5", ylabel = "PDF", xlabel = "τ^(3)")
-    plot!(ylims=(1e-3,10),xlims=(0,10), xscale = :linear, yscale = :log);
-    #plot!(ylims=(0,4),xlims=(0,10),  yscale = :linear);
+    #plot!(ylims=(1e-3,10),xlims=(0,10), xscale = :linear, yscale = :log);
+    plot!(ylims=(0,4),xlims=(0,10),  yscale = :linear);
     for (j, α) in enumerate([α])
         for (k, i) in enumerate(7:13)
             N = 2^i
