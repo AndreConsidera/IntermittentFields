@@ -7,23 +7,24 @@ using Alert
 using Dates
 
 # sizefunc
-R12R13(p::AbstractArray{Float64}) = @. sqrt((p[1,:]-p[2,:])^2 + (p[1,:]-p[3,:])^2)
-R12(p::AbstractArray{Float64}) = @. sqrt((p[1,:]-p[2,:])^2)
+R12R13(p::AbstractArray{Real}) = @. sqrt((p[1,:]-p[2,:])^2 + (p[1,:]-p[3,:])^2)
+R12(p::AbstractArray{Real}) = @. sqrt((p[1,:]-p[2,:])^2)
+
 # all parameters
 input = Dict(
     "np" => [2, 3], 
-    "ncor" => 400000,
-    "nindep" => 1,     
+    "ncor" => 100,
+    "nindep" => 10,     
     "α" => [0.0, 0.6],
     "ξ" => [1/3, 2/3],
     "kernel" => piecewisekernel,
     "tmax" => 10,
+    "λ" => 1,
     "N" => [2^i for i in 7:9],
     "beta" => 1.0,
     "planning_effort" => FFTW.MEASURE,
     "sizefunc" => [@onlyif("np" == 2, R12), @onlyif("np" == 3, R12R13)],
-    "dt" =>  1/(16 * 16 * 10^2),
-    
+    "dt" =>  1/(4* 16 * 10^2), 
 )
 dicts = dict_list(input);
 
@@ -47,28 +48,11 @@ end
 
 
 function makesim(d::Dict)
-    @unpack np, ncor, nindep, α, ξ, kernel, tmax, N, beta, planning_effort, sizefunc, dt = d
-    
-    # callbacks
-    ncb = 6     #number of callbacks
-    condition_list = Array{Function}(undef, ncb)
-    affect_list = Array{Function}(undef, ncb)
-    cb_list = Array{VectorCallback}(undef, ncb)
-    et = tmax * ones(ncb, ncor)    
-    for n in 1:ncb
-        # condition MUST return a vector of Bool
-        condition_list[n]= (p, t) ->[sizefunc(p)[i] >= 1/n for i in 1:ncor]
-        affect_list[n] = (p, t, idx) -> et[n, idx] = min(et[n, idx], t[idx])
-        cb_list[n] = VectorCallback(condition_list[n], affect_list[n])
-    end    
-    cbset = VectorCallbackSet(tuple(cb_list...))
-    
-    # running sim
-    t, p = dispersion(nindep, dt, N, α, ξ, tmax, beta, planning_effort, kernel, np, ncor, sizefunc, logmessage, cbset)
+    @unpack np, ncor, nindep, α, ξ, kernel, tmax, λ, N, beta, planning_effort, sizefunc, dt = d
+    t, p = dispersion(nindep, dt, N, α, ξ, tmax, beta, planning_effort, kernel, np, ncor, sizefunc, logmessage, λ)
     fulld = copy(d)
     fulld["t"] = t
     fulld["p"] = p
-    fulld["et"] = et
     return fulld
 end
 
