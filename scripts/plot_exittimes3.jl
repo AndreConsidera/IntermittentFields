@@ -2,7 +2,7 @@ using DrWatson
 @quickactivate("IntermittentFields");
 using JLD2
 using Statistics
-using StatsPlots;gr()
+using StatsPlots;plotly()
 using StatsBase
 using LinearAlgebra
 
@@ -12,7 +12,7 @@ cm[2] = cgrad(:blues, 7, categorical = true);
 
 # zeromode =========================================================================
 begin  
-    α = 0.0
+    α = 0.6
     Nref = 2^13
     plt = plot(title= "relaxation of shapes α=$α, Np=4e5",ylims=(-3,3),xlims=(0,1));
     plot!(yaxis = "(PDF_N-PDF_$Nref)*(N/$Nref)^(0.7)")
@@ -88,12 +88,12 @@ path  = "piecewisekernel"
 prefix = "ET3l2normR12R13"
 
 begin
-    αs = 0.6
+    αs = 0.0
     plt = plot(title= "pdf of shapes, Np=4e5",ylims=(0,12),xlims=(0.0,1), legend = :topleft);
     plot!(yaxis = "PDF_N")
     #plot!(yscale = :log, ylims = (1e-1,20))
     for (j, α) in enumerate(αs)
-        for (k, i) in enumerate(7:13)
+        for (k, i) in enumerate(7:14)
             N = 2^i
             allf = filter(x->occursin(prefix, x), readdir(datadir("sims","zeromodes",path), join = true))
             allf = filter(x->occursin("N=$N", x), allf)
@@ -133,23 +133,23 @@ begin
     α = 0.0
     plt = plot(title= "pdf of τ_3 α=$α, Np=4e5", ylabel = "PDF", xlabel = "τ^(3)")
     #plot!(ylims=(1e-3,10),xlims=(0,10), xscale = :linear, yscale = :log);
-    plot!(ylims=(0,4),xlims=(0,10),  yscale = :linear);
+    plot!(ylims=(0,1),xlims=(0,3),  yscale = :linear);
     for (j, α) in enumerate([α])
-        for (k, i) in enumerate(7:13)
+        for (k, i) in enumerate(7:9)
             N = 2^i
             allf = filter(x->occursin("ET3l2normR12R13", x), readdir(datadir("sims","zeromodes","piecewisekernel"), join = true))
             allf = filter(x->occursin("N=$N", x), allf)
             allf = filter(x->occursin("α=$α", x), allf)
             
-            f1 = jldopen(datadir("sims", "zeromodes", "piecewisekernel", allf[1]), "r")
-            t = f1["t"]
-            p = f1["p"]
+            f = jldopen(datadir("sims", "zeromodes", "piecewisekernel", allf[1]), "r")
+            t = f["t"]
+            p = f["p"]
             #choosing observable
             r1 = vec(abs.(p[:,1,:]-p[:,2,:]))
             r2 = vec(abs.(p[:,2,:]-p[:,3,:]))
             r3 = vec(abs.(p[:,1,:]-p[:,3,:]))
             t =  vec(t)
-            close(f1)
+            close(f)
             if length(allf)>1 
                 for i in 2:length(allf)
                     f = jldopen(allf[i], "r")
@@ -172,8 +172,8 @@ end
 
 # pdf of τ^(3)_λ =========================================================================
 begin
-    α = 0.6
-    N = 2^11
+    α = 0.0
+    N = 2^13
     plt = plot(title= "pdf of τ_3 α=$α, Np=4e5", ylabel = "PDF", xlabel = "τ^(3)")
     #plot!(ylims=(1e-3,10),xlims=(0,10), xscale = :linear, yscale = :log);
     plot!(ylims=(0,4),xlims=(0,10),  yscale = :linear);
@@ -215,12 +215,12 @@ begin
         end
         
         pdf = normalize(fit(Histogram, t, 0:0.01:10), mode=:pdf)
-        pdf2 = normalize(fit(Histogram, t2, 0:0.01:10), mode=:pdf)
-        pdf4 = normalize(fit(Histogram, t4, 0:0.01:10), mode=:pdf)
-        pdf8 = normalize(fit(Histogram, t8, 0:0.01:10), mode=:pdf)
-        pdf16 = normalize(fit(Histogram, t16, 0:0.01:10), mode=:pdf)
-        pdf32 = normalize(fit(Histogram, t32, 0:0.01:10), mode=:pdf)
-        pdf64 = normalize(fit(Histogram, t64, 0:0.01:10), mode=:pdf)
+        pdf2 = normalize(fit(Histogram, t2*4, 0:0.01:10), mode=:pdf)
+        pdf4 = normalize(fit(Histogram, t4*16, 0:0.01:10), mode=:pdf)
+        pdf8 = normalize(fit(Histogram, t8*64, 0:0.01:10), mode=:pdf)
+        pdf16 = normalize(fit(Histogram, t16*256, 0:0.01:10), mode=:pdf)
+        pdf32 = normalize(fit(Histogram, t32*1024, 0:0.01:10), mode=:pdf)
+        pdf64 = normalize(fit(Histogram, t64*4096, 0:0.01:10), mode=:pdf)
         
 
         plot!(Array(range(0,stop=10,length=1000),),  pdf.weights, label="λ=1") #, c=cm[j][k+1])
