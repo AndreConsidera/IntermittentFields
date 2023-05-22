@@ -12,7 +12,7 @@ function dispersion(nindep::Integer, dt::Real, N::Real ,α::Real, ξ::Real, tmax
     Pforward = plan_rfft(copy(ker.r); flags = FFTW_effort, timelimit = Inf);
     
     push!(r, pi)
-    maxiter = Int(tmax/dt);
+    maxiter = ceil(tmax/dt);
     exittime = zeros(ncor, nindep);
     finalp = zeros(np, ncor, nindep);
     for k in 1:nindep
@@ -45,12 +45,14 @@ function dispersion(nindep::Integer, dt::Real, N::Real ,α::Real, ξ::Real, tmax
 end
 
 # with λ
-function dispersion(nindep::Integer, dt::Real, N::Real ,α::Real, ξ::Real, tmax::Real, beta::Real, FFTW_effort::UInt32, c::Function, np::Integer, ncor::Integer, sizefunc::Function, λ::Real)
+function dispersion(nindep::Integer,dt::Real, N::Real ,α::Real, ξ::Real, tmax::Real, beta::Real, FFTW_effort::UInt32, c::Function, np::Integer, ncor::Integer, sizefunc::Function, λ::Real)
     dx = 2 * pi/N    
     eta = 2 * dx
     r0 = 2 * eta
     r = [-pi + i * dx for i in 0:N-1]
     kappa = eta^beta
+    #dt
+    #dt = (eta/λ)^(2 - ξ)
 
     #instantiating kernels and FFT
     ker = CovarianceKernel(r, eta, CovarianceCorrelation(c), ξ, false)
@@ -59,7 +61,7 @@ function dispersion(nindep::Integer, dt::Real, N::Real ,α::Real, ξ::Real, tmax
     Pforward = plan_rfft(copy(ker.r); flags = FFTW_effort, timelimit = Inf);
     
     push!(r, pi)
-    maxiter = Int(tmax/dt);
+    maxiter = ceil(tmax/dt);
     exittime = zeros(ncor, nindep);
     finalp = zeros(np, ncor, nindep);
     for k in 1:nindep
@@ -107,7 +109,7 @@ function dispersion(nindep::Integer, dt::Real, N::Real ,α::Real, ξ::Real, tmax
     Pforward = plan_rfft(copy(ker.r); flags = FFTW_effort, timelimit = Inf);
     
     push!(r, pi)
-    maxiter = Int(tmax/dt);
+    maxiter = ceil(tmax/dt);
     exittime = zeros(ncor, nindep);
     finalp = zeros(np, ncor, nindep);
     for k in 1:nindep
@@ -164,7 +166,7 @@ function dispersion(nindep::Integer, dt::Real, N::Real ,α::Real, ξ::Real, tmax
     Pforward = plan_rfft(copy(ker.r); flags = FFTW_effort, timelimit = Inf);
     
     push!(r, pi)
-    maxiter = Int(tmax/dt);
+    maxiter = ceil(tmax/dt);
     exittime = zeros(ncor, nindep);
     finalp = zeros(np, ncor, nindep);
     for k in 1:nindep
@@ -223,7 +225,7 @@ function dispersion(nindep::Integer, dt::Real, N::Real ,α::Real, ξ::Real, tmax
     Pforward = plan_rfft(copy(ker.r); flags = FFTW_effort, timelimit = Inf);
     
     push!(r, pi)
-    maxiter = Int(tmax/dt);
+    maxiter = ceil(tmax/dt);
     exittime = zeros(ncor, nindep);
     finalp = zeros(np, ncor, nindep);
     for k in 1:nindep
@@ -282,7 +284,7 @@ function dispersion(nindep::Integer, dt::Real, N::Real ,α::Real, ξ::Real, tmax
     Pforward = plan_rfft(copy(ker.r); flags = FFTW_effort, timelimit = Inf);
     
     push!(r, pi)
-    maxiter = Int(tmax/dt);
+    maxiter = ceil(tmax/dt);
     exittime = zeros(ncor, nindep);
     finalp = zeros(np, ncor, nindep);
     for k in 1:nindep

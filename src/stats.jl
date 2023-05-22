@@ -23,7 +23,7 @@ end
 
 function structurefunc(ker::AbstractKernel, m::Integer, p::Integer, α::Real) 
     r0s = 2 .^[i for i in 0:floor(log2(length(ker.r))) - 1]
-    dr = 2 * pi/length(ker.r)
+    dr = 2pi/length(ker.r)
     l = r0s * dr
     
     sptmp = zeros(length(r0s), m)
@@ -106,5 +106,5 @@ function δv(ker::AbstractKernel, m::Integer, α::Real)
         end
     end
     
-    return reshape(δv,(length(r0s), m * length(ker.r)))
+    return reshape(δv,(length(r0s), m * length(ker.r))), r0s*2pi/N
 end 

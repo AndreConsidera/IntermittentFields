@@ -12,26 +12,30 @@ procs = addprocs(nproc)
 @everywhere R12R13(p::AbstractArray{<:Real}) = @. sqrt((p[1,:]-p[2,:])^2 + (p[1,:]-p[3,:])^2)
 @everywhere R12(p::AbstractArray{<:Real}) = @. sqrt((p[1,:]-p[2,:])^2)
 
+
 # all parameters
-input = Dict(
-    "np" => [3], 
-    "ncor" => [500],
-    "nindep" => [100],
-    "α" => [0.0],
+d = Dict(
+    "np" => [2], 
+    "ncor" => [100],
+    "nindep" => [1],
+    "α" => [0.3],
     "ξ" => [2/3],
     "kernel" => piecewisekernel,
     "tmax" => 10,
-    "λ" => [1],
-    "N" => [2^i for i in 7:9],
+    "λ" => [1/2^0],
+    "N" => [2^i for i in 12:12],
+    "dt"=> 1e-3,
     "beta" => 1.0,
     "planning_effort" => FFTW.MEASURE,
-    "sizefunc" => [@onlyif("np" == 2, R12), @onlyif("np" == 3, R12R13)],
-    "dt" =>  1/(4* 16 * 10^2), 
+    "sizefunc" => [@onlyif("np" == 2, R12), @onlyif("np" == 3, R12R13)], 
 )
-dicts = dict_list(input);
+
+#d["dt"] = vec([((4 * pi ./ d["N"][i])./d["λ"][j]).^(2 .-d["ξ"][k]) for i in eachindex(d["N"]), j in eachindex(d["λ"]), k in eachindex(d["ξ"]) ])
+
+dicts = dict_list(d);
 
 function makesim(d::Dict)
-    @unpack np, ncor, nindep, α, ξ, kernel, tmax, λ, N, beta, planning_effort, sizefunc, dt = d
+    @unpack np, ncor, nindep, α, ξ, kernel, tmax, λ, N, dt, beta, planning_effort, sizefunc = d
     t = zeros(ncor, nindep, nproc);
     p = zeros(np, ncor, nindep, nproc);
     a = Array{Future}(undef, nproc)
@@ -52,5 +56,5 @@ for (i, d) in enumerate(dicts)
     println("sim number=$i/$(length(dicts))")
     println("parameters:", savename(d),"_nproc=$nproc")
     global fulldict = makesim(d)
-    @tagsave(datadir("sims", "zeromodes", string(fulldict["kernel"]), "dispersion", savename("ET3l2normR12R13", d, "jld2")), fulldict, safe = DrWatson.readenv("DRWATSON_SAFESAVE", true))
+#    @tagsave(datadir("sims", "dispersion", "2particle_scaling", savename("noise=scaling", d, "jld2")), fulldict, safe = DrWatson.readenv("DRWATSON_SAFESAVE", true))
 end

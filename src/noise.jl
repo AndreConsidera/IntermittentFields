@@ -42,4 +42,14 @@ struct GmcNoise<:AbstractNoise
         new(wr, wk)
     end
 
+    function GmcNoise(ker::SingularKernel, g2::UnitaryWhiteNoise, alpha::Real, Pforward::FFTW.rFFTWPlan, Pinv::AbstractFFTs.ScaledPlan)
+        
+        σ_sq = 2 * sum(abs.(ker.Lk[2:end]).^2)
+        wr = exp.(alpha .* realization(ker, g2, Pinv) .- alpha^2 .* σ_sq)
+        #wk = Pforward * wr
+        wk = zeros(size(ker.Lk)[1])
+
+        new(wr, wk)
+    end
+
 end
